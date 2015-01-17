@@ -11,6 +11,11 @@ ok( YAML::Dumper->is_literal_number(1),    '1 is a literal number' );
 ok( !YAML::Dumper->is_literal_number("1"), '"1" is not a literal number' );
 ok( YAML::Dumper->is_literal_number( "1" + 1 ), '"1" +1  is a literal number' );
 
+ok( !YAML::Dumper->is_literal_number("Inf"), '"Inf" is not a literal number' );
+ok( YAML::Dumper->is_literal_number( "Inf" + 1 ), '"Inf" +1  is a literal number' );
+ok( !YAML::Dumper->is_literal_number("NaN"), '"NaN" is not a literal number' );
+ok( YAML::Dumper->is_literal_number( "NaN" + 1 ), '"NaN" +1  is a literal number' );
+
 run_is;
 
 __DATA__
@@ -39,3 +44,14 @@ foo: '2.000'
 '10': '2.000'
 '20': 1
 
+=== INF/NAN
++++ perl
++ { a=> q[Inf] + 1, b => q[Nan] + 1, c => q[Inf], d => q[NaN], e => 0 - q[Inf], f => '-Inf'  }
++++ yaml
+---
+a: !inf
+b: !nan
+c: 'Inf'
+d: 'NaN'
+e: !inf -1
+f: '-Inf'

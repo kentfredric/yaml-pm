@@ -488,7 +488,11 @@ sub is_literal_number {
 
 sub _emit_number {
     my $self = shift;
-    return $self->_emit_plain($_[0]);
+    # Not Inf or NaN
+    return $self->_emit_plain($_[0])      if $_[0] * 0 == 0;
+    return $self->_emit_plain("!nan")     if $_[0] != $_[0];
+    return $self->_emit_plain("!inf")     if $_[0] > 0;
+    return $self->_emit_plain("!inf -1")  if $_[0] < 0;
 }
 
 # Check whether or not a scalar should be emitted as an plain scalar.
